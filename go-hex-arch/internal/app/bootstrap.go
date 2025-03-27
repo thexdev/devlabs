@@ -15,8 +15,8 @@ func Bootstrap() *fiber.App {
 	// Create domain service with repository
 	calculatorService := services.NewCalculatorService(historyRepo)
 
-	// Create HTTP handler (adapter)
-	handler := http.NewCalculatorHandler(calculatorService)
+	// Inject BOTH service and repository into the handler
+	handler := http.NewCalculatorHandler(calculatorService, historyRepo)
 
 	// Configure Fiber
 	app := fiber.New()
