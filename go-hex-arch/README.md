@@ -2,17 +2,46 @@
 
 Hexagoal Architecture implementations in Go. Here the service is serving to handle calculator operations. From basic arithmetic to advanced problem.
 
-## Infrastructure
+## Core Functionality
 
-### Primary
+### Basic Arithmetic Operations
 
-This service is exposing two ports:
+- Addition (`+`), Subtraction (`-`), Multiplication (`*`), Division (`/`)
+- Input validation (e.g., division by zero, invalid operators).
 
-- REST API
-- RPC
+### Calculation History
 
-### Secondary
+- Automatically logs every successful calculation.
+- In-memory storage (temporary, resets on server restart).
+- Thread-safe concurrency handling.
 
-Port exposed:
+## API Endpoints
 
-- Database
+### `POST /calculate`
+
+**Request**
+
+```json
+{ "a": 10, "b": 5, "operator": "+" }
+```
+
+**Response**
+
+```json
+{ "result": 15, "error": "" }
+```
+
+### `POST /history`
+
+**Response**
+
+```json
+[
+  {
+    "id": "...", // UUID
+    "request": { "a": 10, "b": 5, "operator": "+" },
+    "response": { "result": 15, "error": "" },
+    "timestamp": 1710000000
+  }
+]
+```
