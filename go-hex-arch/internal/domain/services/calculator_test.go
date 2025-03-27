@@ -4,14 +4,18 @@ import (
 	"context"
 	"gohexarch/internal/domain/models"
 	"gohexarch/internal/domain/services"
+	"gohexarch/internal/infrastructure/secondary/inmemory"
+	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCalculatorService(t *testing.T) {
-	// Initialize the domain service (no mocks needed)
-	service := services.NewCalculatorService()
+// Test the core calculator logic AND history recording
+func TestCalculatorService_WithHistory(t *testing.T) {
+	// Setup: Create in-memory repo and service
+	historyRepo := inmemory.NewHistoryRepository()
+	service := services.NewCalculatorService(historyRepo)
 
 	// Define test cases
 	tests := []struct {
@@ -53,4 +57,60 @@ func TestCalculatorService(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestCalculatorService_History(t *testing.T) {
+	// Mock repository
+	mockRepo := new(MockHistoryRepository)
+	service := services.NewCalculatorService(mockRepo)
+
+	// Test calculation + history save
+	req := models.CalculationRequest{A: 10, B: 5, Operator: "+"}
+	resp, err := service.Calculate(context.Background(), req)
+
+	assert.NoError(t, err)
+	assert.Equal(t, 15.0, resp.Result)
+	assert.True(t, mockRepo.AddEntryCalled) // Verify AddEntry was called
+}
+
+
+// Mock Repository
+type MockHistoryRepository struct {
+	AddEntryCalled bool
+}
+
+func (m *MockHistoryRepository) AddEntry(
+	ctx context.Context,
+	entry models.CalculationHistory,
+) error {
+	m.AddEntryCalled = true
+	return nil
+}
+
+func (m *MockHistoryRepository) GetHistory(
+	ctx context.Context,
+) ([]models.CalculationHistory, error) {
+	return nil, nil
+}
+
+func TestCalculatorService_ConcurrencyHistory(t *testing.T) {
+	repo := inmemory.NewHistoryRepository()
+	service := services.NewCalculatorService(repo)
+
+	// Run 10 concurrent calculations
+	var wg sync.WaitGroup
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			req := models.CalculationRequest{A: float64(i), B: 1, Operator: "+"}
+			_, _ = service.Calculate(context.Background(), req)
+		}(i)
+	}
+	wg.Wait()
+
+	// Verify all entries were recorded
+	history, err := repo.GetHistory(context.Background())
+	assert.NoError(t, err)
+	assert.Len(t, history, 10)
 }

@@ -5,28 +5,51 @@ import (
 	"errors"
 	"gohexarch/internal/domain/models"
 	"gohexarch/internal/domain/ports"
+	"time"
+
+	"github.com/google/uuid"
 )
 
-type CalculatorServiceImpl struct{}
+type CalculatorServiceImpl struct{
+	historyRepo ports.HistoryRepository // Inject repository
+}
 
-func NewCalculatorService() ports.CalculatorService {
-	return &CalculatorServiceImpl{}
+func NewCalculatorService(r ports.HistoryRepository) ports.CalculatorService {
+	return &CalculatorServiceImpl{historyRepo: r}
 }
 
 func (s *CalculatorServiceImpl) Calculate(ctx context.Context, req models.CalculationRequest) (models.CalculationResponse, error) {
+	var resp models.CalculationResponse
+
+	// Business logic
 	switch req.Operator {
 	case "+":
-		return models.CalculationResponse{Result: req.A + req.B}, nil
+		resp.Result = req.A + req.B
 	case "-":
-		return models.CalculationResponse{Result: req.A - req.B}, nil
+		resp.Result = req.A - req.B
 	case "*":
-		return models.CalculationResponse{Result: req.A * req.B}, nil
+		resp.Result = req.A * req.B
 	case "/":
 		if req.B == 0 {
-			return models.CalculationResponse{Error: "division by zero"}, errors.New("division by zero")
+			resp.Error = "division by zero"
+			return resp, errors.New("division by zero")
 		}
-		return models.CalculationResponse{Result: req.A / req.B}, nil
+		resp.Result = req.A / req.B
 	default:
-		return models.CalculationResponse{Error: "invalid operator"}, errors.New("invalid operator")
+		resp.Error = "invalid operator"
+		return resp, errors.New("invalid operator")
 	}
+
+	// Save to history
+	entry := models.CalculationHistory{
+		ID: uuid.NewString(),
+		Request: req,
+		Response: resp,
+		Timestamp: time.Now().Unix(),
+	}
+	if err := s.historyRepo.AddEntry(ctx, entry); err != nil {
+		return resp, err
+	}
+
+	return resp, nil
 }
