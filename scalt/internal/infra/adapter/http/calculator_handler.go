@@ -2,19 +2,19 @@ package http
 
 import (
 	"scalt/internal/app/dto"
-	"scalt/internal/app/service"
+	"scalt/internal/app/port"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type CalculatorHandler struct {
-	service *service.CalculatorService
+	service port.CalculatorPort
 }
 
 func NewCalculatorHandler(
-	service service.CalculatorService,
+	calculatorService port.CalculatorPort,
 ) *CalculatorHandler {
-	return &CalculatorHandler{service: &service}
+	return &CalculatorHandler{service: calculatorService}
 }
 
 func (h *CalculatorHandler) Calculate(c *fiber.Ctx) error {

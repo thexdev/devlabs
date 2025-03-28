@@ -13,7 +13,7 @@ func main() {
 
 	calculatorService := service.NewCalculatorService()
 
-	handler := http.NewCalculatorHandler(*calculatorService)
+	handler := http.NewCalculatorHandler(calculatorService)
 
 	app.Post("/calculate", handler.Calculate)
 
