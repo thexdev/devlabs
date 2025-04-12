@@ -20,18 +20,18 @@ func NewDevideUseCase(repo secondary.Repository) *DevideUseCase {
 func (uc *DevideUseCase) Execute(a float32, b float32) (float32, error) {
 	calc := new(models.Calculator)
 
-	result, err :=  calc.Devide(a, b)
+	result, err := calc.Devide(a, b)
 
 	expression := secondary.Expression{
-		A: a,
-		B: b,
+		A:        a,
+		B:        b,
 		Operator: "/",
 	}
 
 	record := secondary.Record{
-		ID: uuid.NewString(),
+		ID:         uuid.NewString(),
 		Expression: expression,
-		Result: result,
+		Result:     result,
 	}
 
 	uc.repo.Save(record)

@@ -3,6 +3,8 @@ package usecases
 import (
 	"gohexarch/internal/app/ports/secondary"
 	"gohexarch/internal/domain/models"
+
+	"github.com/google/uuid"
 )
 
 type SubstractUseCase struct {
@@ -21,14 +23,15 @@ func (uc *SubstractUseCase) Execute(a float32, b float32) (float32, error) {
 	result, err := calc.Subtract(a, b)
 
 	expression := secondary.Expression{
-		A: a,
-		B: b,
+		A:        a,
+		B:        b,
 		Operator: "-",
 	}
 
 	record := secondary.Record{
+		ID:         uuid.NewString(),
 		Expression: expression,
-		Result: result,
+		Result:     result,
 	}
 
 	uc.repo.Save(record)

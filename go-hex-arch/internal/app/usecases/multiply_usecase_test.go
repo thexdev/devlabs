@@ -11,7 +11,7 @@ import (
 
 func TestMultiplyUseCase(t *testing.T) {
 	mockRepo := new(mock_.MockRepository)
-	
+
 	uc := usecases.NewMultiplyUseCase(mockRepo)
 
 	t.Run("multiply two possitive numbers", func(t *testing.T) {

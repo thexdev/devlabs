@@ -21,7 +21,7 @@ func main() {
 	)
 
 	router := fiber.New()
-	
+
 	router.Use(recover.New())
 
 	calcHandler := http.NewCalculatorHandler(

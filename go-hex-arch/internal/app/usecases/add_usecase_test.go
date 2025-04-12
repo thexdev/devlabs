@@ -16,7 +16,7 @@ func TestAddUseCase_CalculateTwoPossitiveNumbers(t *testing.T) {
 
 	t.Run("add two possitive numbers", func(t *testing.T) {
 		mockRepo.On("Save", mock.Anything).Return(true, nil)
-		
+
 		expected := float32(10)
 
 		result, err := uc.Execute(7, 3)
