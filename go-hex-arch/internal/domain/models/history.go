@@ -1,8 +1,33 @@
 package models
 
-type CalculationHistory struct {
-	ID        string              `json:"id"`
-	Request   CalculationRequest  `json:"request"`
-	Response  CalculationResponse `json:"response"`
-	Timestamp int64               `json:"timestamp"`
+import "time"
+
+type Record struct {
+	ID         string
+	Expression interface{}
+	Result     float32
+}
+
+type History struct {
+	Records []Record
+}
+
+func NewHistory() *History {
+	return &History{}
+}
+
+func (h *History) All() []Record {
+	return h.Records
+}
+
+func (h *History) Push(expression interface{}, result float32) bool {
+	record := Record{
+		ID:         time.Now().String(),
+		Expression: expression,
+		Result:     result,
+	}
+
+	h.Records = append(h.Records, record)
+
+	return true
 }

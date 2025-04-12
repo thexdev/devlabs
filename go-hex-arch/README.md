@@ -22,13 +22,28 @@ Hexagoal Architecture implementations in Go. Here the service is serving to hand
 **Request**
 
 ```json
-{ "a": 10, "b": 5, "operator": "+" }
+{
+  "expression": {
+    "a": 1,
+    "b": 5,
+    "operator": "+"
+  },
+  "result": 6
+}
 ```
 
 **Response**
 
 ```json
-{ "result": 15, "error": "" }
+{
+  "expression": {
+    "a": 1,
+    "b": 5,
+    "operator": "?"
+  },
+  "result": 0,
+  "error": "invalid operator"
+}
 ```
 
 ### `POST /history`
