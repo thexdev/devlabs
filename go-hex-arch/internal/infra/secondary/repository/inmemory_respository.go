@@ -1,24 +1,25 @@
 package repository
 
 import (
+	"gohexarch/internal/app/ports/secondary"
 	"sync"
 )
 
 var mu sync.Mutex
 
 type InMemoryRepository struct {
-	stacks []any
+	stacks []secondary.Record
 }
 
 func NewInMemoryRespository() *InMemoryRepository {
 	return &InMemoryRepository{}
 }
 
-func (r *InMemoryRepository) All() []any {
+func (r *InMemoryRepository) All() []secondary.Record {
 	return r.stacks
 }
 
-func (r *InMemoryRepository) Save(record any) (bool, error) {
+func (r *InMemoryRepository) Save(record secondary.Record) (bool, error) {
 	mu.Lock()
 	defer mu.Unlock()
 

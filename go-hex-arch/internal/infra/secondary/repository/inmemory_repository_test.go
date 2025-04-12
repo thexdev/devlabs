@@ -1,35 +1,24 @@
 package repository_test
 
 import (
+	"gohexarch/internal/app/ports/secondary"
 	"gohexarch/internal/infra/secondary/repository"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-type Expression struct {
-	A        float32
-	B        float32
-	Operator string
-}
-
-type Record struct {
-	ID         string
-	Expression Expression
-	Result     float32
-}
-
 // test utils
 func mockRecordHistory(
 	a float32, operator string, b float32, result float32,
-) Record {
-	expression := Expression{
+) secondary.Record {
+	expression := secondary.Expression{
 		A:        a,
 		B:        b,
 		Operator: operator,
 	}
 
-	record := Record{
+	record := secondary.Record{
 		Expression: expression,
 		Result:     result,
 	}
