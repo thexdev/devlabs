@@ -15,9 +15,6 @@ func NewInMemoryRespository() *InMemoryRepository {
 }
 
 func (r *InMemoryRepository) All() []any {
-	mu.Lock()
-	defer mu.Unlock()
-
 	return r.stacks
 }
 
