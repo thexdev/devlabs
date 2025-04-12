@@ -1,7 +1,7 @@
 package repository_test
 
 import (
-	"gohexarch/internal/infra/primary/secondary/repository"
+	"gohexarch/internal/infra/secondary/repository"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
