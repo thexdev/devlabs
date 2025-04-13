@@ -53,10 +53,31 @@ Hexagoal Architecture implementations in Go. Here the service is serving to hand
 ```json
 [
   {
-    "id": "...", // UUID
-    "request": { "a": 10, "b": 5, "operator": "+" },
-    "response": { "result": 15, "error": "" },
-    "timestamp": 1710000000
+    "ID": "dc9701bf-830c-4f2c-8022-3cb533ddc9c0",
+    "Expression": {
+      "A": 10,
+      "B": 20,
+      "Operator": "-"
+    },
+    "Result": -10
+  },
+  {
+    "ID": "69ef713c-f343-461d-b22b-e7b9246dc625",
+    "Expression": {
+      "A": 10,
+      "B": 20,
+      "Operator": "+"
+    },
+    "Result": 30
+  },
+  {
+    "ID": "5826d45e-529e-4011-b0f4-13363a17a851",
+    "Expression": {
+      "A": 10,
+      "B": 20,
+      "Operator": "+"
+    },
+    "Result": 30
   }
 ]
 ```
