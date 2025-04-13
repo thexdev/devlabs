@@ -1,21 +1,28 @@
 package http
 
 import (
-	"gohexarch/internal/app/ports/secondary"
+	"gohexarch/internal/app/ports/primary"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type HistoryHandler struct {
-	repo secondary.Repository
+	retrieve primary.History
 }
 
-func NewHistoryHandler(repo secondary.Repository) *HistoryHandler {
+func NewHistoryHandler(retrieve primary.History) *HistoryHandler {
 	return &HistoryHandler{
-		repo: repo,
+		retrieve: retrieve,
 	}
 }
 
 func (h *HistoryHandler) All(c *fiber.Ctx) error {
-	return c.JSON(h.repo.All())
+	histories, err := h.retrieve.Execute()
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error": "histories not found",
+		})
+	}
+
+	return c.JSON(histories)
 }

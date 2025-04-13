@@ -18,6 +18,8 @@ func main() {
 		subtractUseCase = usecases.NewSubtractUseCase(repo)
 		devideUseCase   = usecases.NewDevideUseCase(repo)
 		multiplyUseCase = usecases.NewMultiplyUseCase(repo)
+
+		retrieveHistoryUseCase = usecases.NewRetrieveHistoryUseCase(repo)
 	)
 
 	router := fiber.New()
@@ -31,7 +33,7 @@ func main() {
 		multiplyUseCase,
 	)
 
-	historyHandler := http.NewHistoryHandler(repo)
+	historyHandler := http.NewHistoryHandler(retrieveHistoryUseCase)
 
 	router.Post("/compute", calcHandler.Compute)
 	router.Get("/history", historyHandler.All)
