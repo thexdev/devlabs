@@ -6,6 +6,18 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+type CalculatorRequest struct {
+	A        float32 `json:"a"`
+	B        float32 `json:"b"`
+	Operator string  `json:"operator"`
+}
+
+type CalculatorResponse struct {
+	Expression CalculatorRequest `json:"expression"`
+	Result     float32           `json:"result"`
+	Error      string            `json:"error,omitempty"`
+}
+
 type CalculatorHandler struct {
 	Add      primary.Add
 	Subtract primary.Subtract
@@ -29,8 +41,8 @@ func NewCalculatorHandler(
 
 func (h *CalculatorHandler) Compute(c *fiber.Ctx) error {
 	var (
-		req = new(Request)
-		res = new(Response)
+		req = new(CalculatorRequest)
+		res = new(CalculatorResponse)
 	)
 
 	if err := c.BodyParser(&req); err != nil {
