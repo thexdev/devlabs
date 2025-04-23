@@ -1,0 +1,3 @@
+[submodule "catpay-backend"]
+	path = catpay-backend
+	url = git@github.com:thexdev/catpay-backend.git
